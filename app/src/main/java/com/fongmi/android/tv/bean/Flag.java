@@ -75,7 +75,9 @@ public class Flag implements Parcelable {
 
     public void setActivated(Flag item) {
         this.activated = item.equals(this);
-        if (activated) item.episodes = episodes;
+        if (activated) {
+            item.episodes = episodes;
+        }
     }
 
     public int getPosition() {
@@ -92,29 +94,60 @@ public class Flag implements Parcelable {
             String[] split = urls[i].split("\\$");
             String number = String.format(Locale.getDefault(), "%02d", i + 1);
             Episode episode = split.length > 1 ? Episode.create(split[0].isEmpty() ? number : split[0].trim(), split[1]) : Episode.create(number, urls[i]);
-            if (!getEpisodes().contains(episode)) getEpisodes().add(episode);
+            if (!getEpisodes().contains(episode)) {
+                getEpisodes().add(episode);
+            }
         }
     }
 
     public void toggle(boolean activated, Episode episode) {
-        if (activated) setActivated(episode);
-        else for (Episode item : getEpisodes()) item.deactivated();
+        if (activated) {
+            setActivated(episode);
+        } else {
+            for (Episode item : getEpisodes()) {
+                item.deactivated();
+            }
+        }
     }
 
     private void setActivated(Episode episode) {
         setPosition(getEpisodes().indexOf(episode));
-        for (int i = 0; i < getEpisodes().size(); i++) getEpisodes().get(i).setActivated(i == getPosition());
+        for (int i = 0; i < getEpisodes().size(); i++) {
+            getEpisodes().get(i).setActivated(i == getPosition());
+        }
     }
 
     public Episode find(String remarks, boolean strict) {
         int number = Utils.getDigit(remarks);
-        if (getEpisodes().size() == 0) return null;
-        if (getEpisodes().size() == 1) return getEpisodes().get(0);
-        for (Episode item : getEpisodes()) if (item.rule1(remarks)) return item;
-        for (Episode item : getEpisodes()) if (item.rule2(number)) return item;
-        for (Episode item : getEpisodes()) if (item.rule3(remarks)) return item;
-        for (Episode item : getEpisodes()) if (item.rule4(remarks)) return item;
-        if (getPosition() != -1) return getEpisodes().get(getPosition());
+        if (getEpisodes().size() == 0) {
+            return null;
+        }
+        if (getEpisodes().size() == 1) {
+            return getEpisodes().get(0);
+        }
+        for (Episode item : getEpisodes()) {
+            if (item.rule1(remarks)) {
+                return item;
+            }
+        }
+        for (Episode item : getEpisodes()) {
+            if (item.rule2(number)) {
+                return item;
+            }
+        }
+        for (Episode item : getEpisodes()) {
+            if (item.rule3(remarks)) {
+                return item;
+            }
+        }
+        for (Episode item : getEpisodes()) {
+            if (item.rule4(remarks)) {
+                return item;
+            }
+        }
+        if (getPosition() != -1) {
+            return getEpisodes().get(getPosition());
+        }
         return strict ? null : getEpisodes().get(0);
     }
 
@@ -127,21 +160,29 @@ public class Flag implements Parcelable {
     public List<Magnet> getMagnet() {
         Iterator<Episode> iterator = getEpisodes().iterator();
         List<Magnet> items = new ArrayList<>();
-        while (iterator.hasNext()) addMagnet(iterator, items);
+        while (iterator.hasNext()) {
+            addMagnet(iterator, items);
+        }
         return items;
     }
 
     private void addMagnet(Iterator<Episode> iterator, List<Magnet> items) {
         String url = iterator.next().getUrl();
-        if (!Sniffer.isThunder(url)) return;
+        if (!Sniffer.isThunder(url)) {
+            return;
+        }
         items.add(Magnet.get(url));
         iterator.remove();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Flag)) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Flag)) {
+            return false;
+        }
         Flag it = (Flag) obj;
         return getFlag().equals(it.getFlag());
     }

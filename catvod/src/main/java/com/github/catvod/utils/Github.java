@@ -8,6 +8,8 @@ public class Github {
 
     public static final String URL = "https://fongmi.cachefly.net/FongMi/Release/main";
 
+    //https://fongmi.cachefly.net/FongMi/Release/main/apk/dev/leanback.json
+
     private static String getUrl(String path, String name) {
         return URL + "/" + path + "/" + name;
     }

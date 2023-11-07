@@ -32,9 +32,14 @@ public class Download {
     }
 
     public void start() {
-        if (url.startsWith("file")) return;
-        if (callback == null) doInBackground();
-        else App.execute(this::doInBackground);
+        if (url.startsWith("file")) {
+            return;
+        }
+        if (callback == null) {
+            doInBackground();
+        } else {
+            App.execute(this::doInBackground);
+        }
     }
 
     private void doInBackground() {
@@ -42,9 +47,13 @@ public class Download {
             Path.clear(file);
             Response response = OkHttp.newCall(url).execute();
             download(response.body().byteStream(), Double.parseDouble(response.header("Content-Length", "1")));
-            if (callback != null) App.post(() -> callback.success(Path.chmod(file)));
+            if (callback != null) {
+                App.post(() -> callback.success(Path.chmod(file)));
+            }
         } catch (Exception e) {
-            if (callback != null) App.post(() -> callback.error(e.getMessage()));
+            if (callback != null) {
+                App.post(() -> callback.error(e.getMessage()));
+            }
         }
     }
 
@@ -58,7 +67,9 @@ public class Download {
                 totalBytes += readBytes;
                 os.write(buffer, 0, readBytes);
                 int progress = (int) (totalBytes / length * 100.0);
-                if (callback != null) App.post(() -> callback.progress(progress));
+                if (callback != null) {
+                    App.post(() -> callback.progress(progress));
+                }
             }
         }
     }

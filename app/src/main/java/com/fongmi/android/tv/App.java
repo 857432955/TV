@@ -67,7 +67,9 @@ public class App extends Application {
 
     public static void post(Runnable runnable, long delayMillis) {
         get().handler.removeCallbacks(runnable);
-        if (delayMillis >= 0) get().handler.postDelayed(runnable, delayMillis);
+        if (delayMillis >= 0) {
+            get().handler.postDelayed(runnable, delayMillis);
+        }
     }
 
     public static void removeCallbacks(Runnable runnable) {
@@ -75,7 +77,9 @@ public class App extends Application {
     }
 
     public static void removeCallbacks(Runnable... runnable) {
-        for (Runnable r : runnable) get().handler.removeCallbacks(r);
+        for (Runnable r : runnable) {
+            get().handler.removeCallbacks(r);
+        }
     }
 
     public void setHook(boolean hook) {
@@ -112,32 +116,44 @@ public class App extends Application {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
-                if (activity != activity()) setActivity(activity);
+                if (activity != activity()) {
+                    setActivity(activity);
+                }
             }
 
             @Override
             public void onActivityStarted(@NonNull Activity activity) {
-                if (activity != activity()) setActivity(activity);
+                if (activity != activity()) {
+                    setActivity(activity);
+                }
             }
 
             @Override
             public void onActivityResumed(@NonNull Activity activity) {
-                if (activity != activity()) setActivity(activity);
+                if (activity != activity()) {
+                    setActivity(activity);
+                }
             }
 
             @Override
             public void onActivityPaused(@NonNull Activity activity) {
-                if (activity == activity()) setActivity(null);
+                if (activity == activity()) {
+                    setActivity(null);
+                }
             }
 
             @Override
             public void onActivityStopped(@NonNull Activity activity) {
-                if (activity == activity()) setActivity(null);
+                if (activity == activity()) {
+                    setActivity(null);
+                }
             }
 
             @Override
             public void onActivityDestroyed(@NonNull Activity activity) {
-                if (activity == activity()) setActivity(null);
+                if (activity == activity()) {
+                    setActivity(null);
+                }
             }
 
             @Override
@@ -148,13 +164,17 @@ public class App extends Application {
 
     @Override
     public PackageManager getPackageManager() {
-        if (!hook) return getBaseContext().getPackageManager();
+        if (!hook) {
+            return getBaseContext().getPackageManager();
+        }
         return LiveConfig.get().getHome().getCore();
     }
 
     @Override
     public String getPackageName() {
-        if (!hook) return getBaseContext().getPackageName();
+        if (!hook) {
+            return getBaseContext().getPackageName();
+        }
         return LiveConfig.get().getHome().getCore().getPkg();
     }
 }

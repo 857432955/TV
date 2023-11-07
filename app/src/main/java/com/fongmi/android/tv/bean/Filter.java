@@ -59,7 +59,9 @@ public class Filter implements Parcelable {
 
     public String setActivated(String v) {
         int index = getValue().indexOf(new Value(v));
-        if (index != -1) getValue().get(index).setActivated(true);
+        if (index != -1) {
+            getValue().get(index).setActivated(true);
+        }
         return v;
     }
 
@@ -69,8 +71,12 @@ public class Filter implements Parcelable {
     }
 
     public Filter trans() {
-        if (Trans.pass()) return this;
-        for (Value value : getValue()) value.trans();
+        if (Trans.pass()) {
+            return this;
+        }
+        for (Value value : getValue()) {
+            value.trans();
+        }
         return this;
     }
 

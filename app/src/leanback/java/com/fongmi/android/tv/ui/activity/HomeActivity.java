@@ -83,9 +83,9 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
 
     @Override
     protected void initView() {
-        mClock = Clock.create(mBinding.time).format("MM/dd HH:mm:ss");
+        mClock = Clock.create(mBinding.time).format("yyyy-MM-dd HH:mm:ss EEEE");
         mBinding.progressLayout.showProgress();
-        Updater.get().release().start();
+        //Updater.get().release().start();
         Server.get().start();
         setRecyclerView();
         setViewModel();
@@ -100,7 +100,9 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
             @Override
             public void onChildViewHolderSelected(@NonNull RecyclerView parent, @Nullable RecyclerView.ViewHolder child, int position, int subposition) {
                 mBinding.toolbar.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
-                if (mPresenter.isDelete()) setHistoryDelete(false);
+                if (mPresenter.isDelete()) {
+                    setHistoryDelete(false);
+                }
             }
         });
     }
@@ -189,8 +191,12 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
         int index = getRecommendIndex();
         String home = ApiConfig.get().getHome().getName();
         mBinding.title.setText(home.isEmpty() ? ResUtil.getString(R.string.app_name) : home);
-        if (mAdapter.size() > index) mAdapter.removeItems(index, mAdapter.size() - index);
-        if (ApiConfig.get().getHome().getKey().isEmpty()) return;
+        if (mAdapter.size() > index) {
+            mAdapter.removeItems(index, mAdapter.size() - index);
+        }
+        if (ApiConfig.get().getHome().getKey().isEmpty()) {
+            return;
+        }
         mViewModel.homeContent();
         mAdapter.add("progress");
     }
@@ -247,7 +253,11 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
     }
 
     private int getRecommendIndex() {
-        for (int i = 0; i < mAdapter.size(); i++) if (mAdapter.get(i).equals(R.string.home_recommend)) return i + 1;
+        for (int i = 0; i < mAdapter.size(); i++) {
+            if (mAdapter.get(i).equals(R.string.home_recommend)) {
+                return i + 1;
+            }
+        }
         return -1;
     }
 
@@ -387,7 +397,9 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (Utils.isMenuKey(event)) showDialog();
+        if (Utils.isMenuKey(event)) {
+            showDialog();
+        }
         return super.dispatchKeyEvent(event);
     }
 

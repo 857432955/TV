@@ -57,20 +57,30 @@ public class Clock {
     private void doJob() {
         try {
             date.setTime(System.currentTimeMillis());
-            if (callback != null) callback.onTimeChanged();
-            if (view != null) view.setText(format.format(date));
+            if (callback != null) {
+                callback.onTimeChanged();
+            }
+            if (view != null) {
+                view.setText(format.format(date));
+            }
         } catch (Exception ignored) {
         }
     }
 
     public Clock stop() {
-        if (timer != null) timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+        }
         return this;
     }
 
     public void release() {
-        if (timer != null) timer.cancel();
-        if (callback != null) callback = null;
+        if (timer != null) {
+            timer.cancel();
+        }
+        if (callback != null) {
+            callback = null;
+        }
     }
 
     public interface Callback {

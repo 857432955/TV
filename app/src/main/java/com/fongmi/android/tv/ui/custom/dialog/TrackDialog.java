@@ -52,7 +52,11 @@ public final class TrackDialog extends BaseDialog implements TrackAdapter.OnClic
     }
 
     public void show(FragmentActivity activity) {
-        for (Fragment f : activity.getSupportFragmentManager().getFragments()) if (f instanceof BottomSheetDialogFragment) return;
+        for (Fragment f : activity.getSupportFragmentManager().getFragments()) {
+            if (f instanceof BottomSheetDialogFragment) {
+                return;
+            }
+        }
         show(activity.getSupportFragmentManager(), null);
         this.listener = (Listener) activity;
     }
@@ -72,8 +76,12 @@ public final class TrackDialog extends BaseDialog implements TrackAdapter.OnClic
 
     private List<Track> getTrack() {
         List<Track> items = new ArrayList<>();
-        if (player.isExo()) addExoTrack(items);
-        if (player.isIjk()) addIjkTrack(items);
+        if (player.isExo()) {
+            addExoTrack(items);
+        }
+        if (player.isIjk()) {
+            addIjkTrack(items);
+        }
         return items;
     }
 
@@ -81,7 +89,9 @@ public final class TrackDialog extends BaseDialog implements TrackAdapter.OnClic
         List<Tracks.Group> groups = player.exo().getCurrentTracks().getGroups();
         for (int i = 0; i < groups.size(); i++) {
             Tracks.Group trackGroup = groups.get(i);
-            if (trackGroup.getType() != type) continue;
+            if (trackGroup.getType() != type) {
+                continue;
+            }
             for (int j = 0; j < trackGroup.length; j++) {
                 Track item = new Track(type, provider.getTrackName(trackGroup.getTrackFormat(j)));
                 item.setAdaptive(trackGroup.isAdaptiveSupported());
@@ -99,7 +109,9 @@ public final class TrackDialog extends BaseDialog implements TrackAdapter.OnClic
         List<ITrackInfo> trackInfos = player.ijk().getTrackInfo();
         for (int i = 0; i < trackInfos.size(); i++) {
             ITrackInfo trackInfo = trackInfos.get(i);
-            if (trackInfo.getTrackType() != type) continue;
+            if (trackInfo.getTrackType() != type) {
+                continue;
+            }
             Track item = new Track(type, provider.getTrackName(trackInfo));
             item.setPlayer(player.getPlayer());
             item.setSelected(track == i);

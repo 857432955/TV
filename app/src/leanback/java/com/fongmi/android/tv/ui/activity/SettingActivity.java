@@ -243,11 +243,11 @@ public class SettingActivity extends BaseActivity implements ConfigCallback, Sit
     }
 
     private void onVersion(View view) {
-        Updater.get().force().release().start();
+        //Updater.get().force().release().start();
     }
 
     private boolean onVersionDev(View view) {
-        Updater.get().force().dev().start();
+        //Updater.get().force().dev().start();
         return true;
     }
 

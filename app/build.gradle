@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "com.fongmi.android.tv"
         minSdk 21
-        targetSdk 28
+        targetSdk 31
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
@@ -21,12 +21,12 @@ android {
         leanback {
             dimension "mode"
             versionCode 206
-            versionName "20231014#2"
+            versionName "20231107#2"
         }
         mobile {
             dimension "mode"
             versionCode 206
-            versionName "20231014#2"
+            versionName "20231107#2"
         }
         java {
             dimension "api"
@@ -48,10 +48,26 @@ android {
         viewBinding true
     }
 
+    signingConfigs {
+        debug {
+            storeFile file("signature/car_keystore.jks") // 需要修改成您的签名文件路径
+            storePassword 'zrx2910'        // 需要修改成您的签名文件密码
+            keyAlias 'car'     // 需要修改成您的签名文件别名
+            keyPassword 'zrx2910'          // 需要修改成您的签名文件别名密码
+        }
+        release {
+            storeFile file("signature/car_keystore.jks") // 需要修改成您的签名文件路径
+            storePassword 'zrx2910'        // 需要修改成您的签名文件密码
+            keyAlias 'car'     // 需要修改成您的签名文件别名
+            keyPassword 'zrx2910'          // 需要修改成您的签名文件别名密码
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

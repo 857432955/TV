@@ -38,11 +38,20 @@ public class Magnet implements Callable<List<Episode>> {
         boolean torrent = Sniffer.isTorrent(url);
         List<Episode> episodes = new ArrayList<>();
         GetTaskId taskId = XLTaskHelper.get().parse(url, Path.thunder(Util.md5(url)));
-        if (!torrent && !taskId.getRealUrl().startsWith("magnet")) return List.of(Episode.create(taskId.getFileName(), taskId.getRealUrl()));
-        if (torrent) Download.create(url, taskId.getSaveFile()).start();
-        else while (XLTaskHelper.get().getTaskInfo(taskId).getTaskStatus() != 2 && time < 5000) sleep();
+        if (!torrent && !taskId.getRealUrl().startsWith("magnet")) {
+            return List.of(Episode.create(taskId.getFileName(), taskId.getRealUrl()));
+        }
+        if (torrent) {
+            Download.create(url, taskId.getSaveFile()).start();
+        } else {
+            while (XLTaskHelper.get().getTaskInfo(taskId).getTaskStatus() != 2 && time < 5000) {
+                sleep();
+            }
+        }
         List<TorrentFileInfo> medias = XLTaskHelper.get().getTorrentInfo(taskId.getSaveFile()).getMedias();
-        for (TorrentFileInfo media : medias) episodes.add(Episode.create(media.getFileName(), media.getSize(), media.getPlayUrl()));
+        for (TorrentFileInfo media : medias) {
+            episodes.add(Episode.create(media.getFileName(), media.getSize(), media.getPlayUrl()));
+        }
         XLTaskHelper.get().stopTask(taskId);
         return episodes;
     }
