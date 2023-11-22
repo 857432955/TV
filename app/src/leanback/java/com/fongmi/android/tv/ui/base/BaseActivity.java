@@ -67,15 +67,22 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void notifyItemChanged(RecyclerView view, ArrayObjectAdapter adapter) {
-        if (!view.isComputingLayout()) adapter.notifyArrayItemRangeChanged(0, adapter.size());
+        if (!view.isComputingLayout()) {
+            adapter.notifyArrayItemRangeChanged(0, adapter.size());
+        }
     }
 
     private void setWall() {
         try {
-            if (!customWall()) return;
+            if (!customWall()) {
+                return;
+            }
             File file = FileUtil.getWall(Setting.getWall());
-            if (file.exists() && file.length() > 0) getWindow().setBackgroundDrawable(WallConfig.drawable(Drawable.createFromPath(file.getAbsolutePath())));
-            else getWindow().setBackgroundDrawableResource(ResUtil.getDrawable(file.getName()));
+            if (file.exists() && file.length() > 0) {
+                getWindow().setBackgroundDrawable(WallConfig.drawable(Drawable.createFromPath(file.getAbsolutePath())));
+            } else {
+                getWindow().setBackgroundDrawableResource(ResUtil.getDrawable(file.getName()));
+            }
         } catch (Exception e) {
             getWindow().setBackgroundDrawableResource(R.drawable.wallpaper_1);
         }
@@ -92,7 +99,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRefreshEvent(RefreshEvent event) {
-        if (event.getType() != RefreshEvent.Type.WALL) return;
+        if (event.getType() != RefreshEvent.Type.WALL) {
+            return;
+        }
         WallConfig.get().setDrawable(null);
         setWall();
     }
@@ -111,7 +120,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) Utils.hideSystemUI(this);
+        if (hasFocus) {
+            Utils.hideSystemUI(this);
+        }
     }
 
     @Override

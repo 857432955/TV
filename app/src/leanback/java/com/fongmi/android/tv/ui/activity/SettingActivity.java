@@ -66,7 +66,9 @@ public class SettingActivity extends BaseActivity implements ConfigCallback, Sit
 
     private String[] getDohList() {
         List<String> list = new ArrayList<>();
-        for (Doh item : ApiConfig.get().getDoh()) list.add(item.getName());
+        for (Doh item : ApiConfig.get().getDoh()) {
+            list.add(item.getName());
+        }
         return list.toArray(new String[0]);
     }
 

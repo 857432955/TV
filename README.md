@@ -42,3 +42,5 @@ https://github.com/CatVodTVOfficial/CatVodTVJarLoader
 [發布頻道](https://t.me/fongmi_release)
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E5OT2RJ)
+
+https://codeberg.org/ygbh8888/4k/raw/branch/main/dc.json

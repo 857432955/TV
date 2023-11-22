@@ -80,8 +80,11 @@ public class ProgressLayout extends RelativeLayout {
     }
 
     public void showContent(boolean flag, int size) {
-        if (flag && size == 0) showEmpty();
-        else showContent();
+        if (flag && size == 0) {
+            showEmpty();
+        } else {
+            showContent();
+        }
     }
 
     public boolean isProgress() {
@@ -97,7 +100,9 @@ public class ProgressLayout extends RelativeLayout {
     }
 
     public void switchState(State state) {
-        if (mState == state) return;
+        if (mState == state) {
+            return;
+        }
         mState = state;
         switch (state) {
             case CONTENT:
@@ -120,8 +125,11 @@ public class ProgressLayout extends RelativeLayout {
 
     private void setContentVisibility(boolean visible) {
         for (View view : mContentViews) {
-            if (visible) showView(view);
-            else hideView(view);
+            if (visible) {
+                showView(view);
+            } else {
+                hideView(view);
+            }
         }
     }
 

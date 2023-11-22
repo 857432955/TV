@@ -18,7 +18,6 @@ import androidx.viewbinding.ViewBinding;
 import com.fongmi.android.tv.App;
 import com.fongmi.android.tv.Product;
 import com.fongmi.android.tv.R;
-import com.fongmi.android.tv.Updater;
 import com.fongmi.android.tv.api.ApiConfig;
 import com.fongmi.android.tv.api.LiveConfig;
 import com.fongmi.android.tv.api.WallConfig;
@@ -221,7 +220,7 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
     }
 
     private void getHistory() {
-        getHistory(false);
+        getHistory(true);
     }
 
     private void getHistory(boolean renew) {
@@ -229,9 +228,15 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
         int historyIndex = getHistoryIndex();
         int recommendIndex = getRecommendIndex();
         boolean exist = recommendIndex - historyIndex == 2;
-        if (renew) mHistoryAdapter = new ArrayObjectAdapter(mPresenter = new HistoryPresenter(this));
-        if ((items.isEmpty() && exist) || (renew && exist)) mAdapter.removeItems(historyIndex, 1);
-        if ((items.size() > 0 && !exist) || (renew && exist)) mAdapter.add(historyIndex, new ListRow(mHistoryAdapter));
+        if (renew) {
+            mHistoryAdapter = new ArrayObjectAdapter(mPresenter = new HistoryPresenter(this));
+        }
+        if ((items.isEmpty() && exist) || (renew && exist)) {
+            mAdapter.removeItems(historyIndex, 1);
+        }
+        if ((items.size() > 0 && !exist) || (renew && exist)) {
+            mAdapter.add(historyIndex, new ListRow(mHistoryAdapter));
+        }
         mHistoryAdapter.setItems(items, null);
     }
 
@@ -248,7 +253,11 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
     }
 
     private int getHistoryIndex() {
-        for (int i = 0; i < mAdapter.size(); i++) if (mAdapter.get(i).equals(R.string.home_history)) return i + 1;
+        for (int i = 0; i < mAdapter.size(); i++) {
+            if (mAdapter.get(i).equals(R.string.home_history)) {
+                return i + 1;
+            }
+        }
         return -1;
     }
 
