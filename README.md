@@ -43,4 +43,7 @@ https://github.com/CatVodTVOfficial/CatVodTVJarLoader
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E5OT2RJ)
 
+### 订阅地址
 https://codeberg.org/ygbh8888/4k/raw/branch/main/dc.json
+
+https://cyuan.netlify.app/tvbox/duo.json
