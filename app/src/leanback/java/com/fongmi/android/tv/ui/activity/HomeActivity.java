@@ -297,6 +297,8 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
             case R.string.home_setting:
                 SettingActivity.start(this);
                 break;
+            default:
+                break;
         }
     }
 

@@ -124,16 +124,22 @@ public class ApiConfig {
         try {
             checkJson(JsonParser.parseString(Decoder.getJson(config.getUrl())).getAsJsonObject(), callback);
         } catch (Throwable e) {
-            if (TextUtils.isEmpty(config.getUrl())) App.post(() -> callback.error(""));
-            else loadCache(callback, e);
+            if (TextUtils.isEmpty(config.getUrl())) {
+                App.post(() -> callback.error(""));
+            } else {
+                loadCache(callback, e);
+            }
             LiveConfig.get().load();
             e.printStackTrace();
         }
     }
 
     private void loadCache(Callback callback, Throwable e) {
-        if (!TextUtils.isEmpty(config.getJson())) checkJson(JsonParser.parseString(config.getJson()).getAsJsonObject(), callback);
-        else App.post(() -> callback.error(Notify.getError(R.string.error_config_get, e)));
+        if (!TextUtils.isEmpty(config.getJson())) {
+            checkJson(JsonParser.parseString(config.getJson()).getAsJsonObject(), callback);
+        } else {
+            App.post(() -> callback.error(Notify.getError(R.string.error_config_get, e)));
+        }
     }
 
     private void checkJson(JsonObject object, Callback callback) {
@@ -147,7 +153,9 @@ public class ApiConfig {
     private void parseDepot(JsonObject object, Callback callback) {
         List<Depot> items = Depot.arrayFrom(object.getAsJsonArray("urls").toString());
         List<Config> configs = new ArrayList<>();
-        for (Depot item : items) configs.add(Config.find(item, 0));
+        for (Depot item : items) {
+            configs.add(Config.find(item, 0));
+        }
         Config.delete(config.getUrl());
         config = configs.get(0);
         loadConfig(callback);
@@ -171,7 +179,9 @@ public class ApiConfig {
     private void initSite(JsonObject object) {
         for (JsonElement element : Json.safeListElement(object, "sites")) {
             Site site = Site.objectFrom(element);
-            if (sites.contains(site)) continue;
+            if (sites.contains(site)) {
+                continue;
+            }
             site.setApi(parseApi(site.getApi()));
             site.setExt(parseExt(site.getExt()));
             sites.add(site.sync());
@@ -187,23 +197,38 @@ public class ApiConfig {
         Config temp = null;
         boolean live = object.has("lives");
         boolean same = LiveConfig.get().isSame(config.getUrl());
-        if (live) temp = Config.find(config, 1).update();
-        if (live && same) LiveConfig.get().clear().config(temp).parse(object);
-        else LiveConfig.get().load();
+        if (live) {
+            temp = Config.find(config, 1).update();
+        }
+        if (live && same) {
+            LiveConfig.get().clear().config(temp).parse(object);
+        } else {
+            LiveConfig.get().load();
+        }
     }
 
     private void initParse(JsonObject object) {
         for (JsonElement element : Json.safeListElement(object, "parses")) {
             Parse parse = Parse.objectFrom(element);
-            if (parse.getName().equals(config.getParse()) && parse.getType() > 1) setParse(parse);
-            if (!parses.contains(parse)) parses.add(parse);
+            if (parse.getName().equals(config.getParse()) && parse.getType() > 1) {
+                setParse(parse);
+            }
+            if (!parses.contains(parse)) {
+                parses.add(parse);
+            }
         }
     }
 
     private void initOther(JsonObject object) {
-        if (parses.size() > 0) parses.add(0, Parse.god());
-        if (home == null) setHome(sites.isEmpty() ? new Site() : sites.get(0));
-        if (parse == null) setParse(parses.isEmpty() ? new Parse() : parses.get(0));
+        if (parses.size() > 0) {
+            parses.add(0, Parse.god());
+        }
+        if (home == null) {
+            setHome(sites.isEmpty() ? new Site() : sites.get(0));
+        }
+        if (parse == null) {
+            setParse(parses.isEmpty() ? new Parse() : parses.get(0));
+        }
         setRules(Rule.arrayFrom(object.getAsJsonArray("rules")));
         setDoh(Doh.arrayFrom(object.getAsJsonArray("doh")));
         setFlags(Json.safeListString(object, "flags"));
@@ -212,20 +237,40 @@ public class ApiConfig {
     }
 
     private String parseApi(String api) {
-        if (TextUtils.isEmpty(api)) return api;
-        if (api.startsWith("http")) return api;
-        if (api.startsWith("file")) return Utils.convert(api);
-        if (api.endsWith(".js")) return parseApi(Utils.convert(config.getUrl(), api));
+        if (TextUtils.isEmpty(api)) {
+            return api;
+        }
+        if (api.startsWith("http")) {
+            return api;
+        }
+        if (api.startsWith("file")) {
+            return Utils.convert(api);
+        }
+        if (api.endsWith(".js")) {
+            return parseApi(Utils.convert(config.getUrl(), api));
+        }
         return api;
     }
 
     private String parseExt(String ext) {
-        if (TextUtils.isEmpty(ext)) return ext;
-        if (ext.startsWith("http")) return ext;
-        if (ext.startsWith("file")) return Utils.convert(ext);
-        if (ext.startsWith("img+")) return Decoder.getExt(ext);
-        if (ext.contains("http") || ext.contains("file")) return ext;
-        if (ext.endsWith(".txt") || ext.endsWith(".json") || ext.endsWith(".py") || ext.endsWith(".js")) return parseExt(Utils.convert(config.getUrl(), ext));
+        if (TextUtils.isEmpty(ext)) {
+            return ext;
+        }
+        if (ext.startsWith("http")) {
+            return ext;
+        }
+        if (ext.startsWith("file")) {
+            return Utils.convert(ext);
+        }
+        if (ext.startsWith("img+")) {
+            return Decoder.getExt(ext);
+        }
+        if (ext.contains("http") || ext.contains("file")) {
+            return ext;
+        }
+        if (ext.endsWith(".txt") || ext.endsWith(".json") || ext.endsWith(".py") || ext.endsWith(".js")) {
+            return parseExt(Utils.convert(config.getUrl(), ext));
+        }
         return ext;
     }
 
@@ -233,19 +278,28 @@ public class ApiConfig {
         boolean js = site.getApi().contains(".js");
         boolean py = site.getApi().startsWith("py_");
         boolean csp = site.getApi().startsWith("csp_");
-        if (py) return pyLoader.getSpider(site.getKey(), site.getApi(), site.getExt());
-        else if (js) return jsLoader.getSpider(site.getKey(), site.getApi(), site.getExt(), site.getJar());
-        else if (csp) return jarLoader.getSpider(site.getKey(), site.getApi(), site.getExt(), site.getJar());
-        else return new SpiderNull();
+        if (py) {
+            return pyLoader.getSpider(site.getKey(), site.getApi(), site.getExt());
+        } else if (js) {
+            return jsLoader.getSpider(site.getKey(), site.getApi(), site.getExt(), site.getJar());
+        } else if (csp) {
+            return jarLoader.getSpider(site.getKey(), site.getApi(), site.getExt(), site.getJar());
+        } else {
+            return new SpiderNull();
+        }
     }
 
     public void setRecent(Site site) {
         boolean js = site.getApi().contains(".js");
         boolean py = site.getApi().startsWith("py_");
         boolean csp = site.getApi().startsWith("csp_");
-        if (js) jsLoader.setRecent(site.getKey());
-        else if (py) pyLoader.setRecent(site.getKey());
-        else if (csp) jarLoader.setRecent(site.getJar());
+        if (js) {
+            jsLoader.setRecent(site.getKey());
+        } else if (py) {
+            pyLoader.setRecent(site.getKey());
+        } else if (csp) {
+            jarLoader.setRecent(site.getJar());
+        }
     }
 
     public Object[] proxyLocal(Map<String, String> params) {
@@ -268,7 +322,9 @@ public class ApiConfig {
 
     public List<Doh> getDoh() {
         List<Doh> items = Doh.get(App.get());
-        if (doh == null) return items;
+        if (doh == null) {
+            return items;
+        }
         items.removeAll(doh);
         items.addAll(doh);
         return items;
@@ -283,7 +339,11 @@ public class ApiConfig {
     }
 
     public void setRules(List<Rule> rules) {
-        for (Rule rule : rules) if ("proxy".equals(rule.getName())) OkHttp.selector().setHosts(rule.getHosts());
+        for (Rule rule : rules) {
+            if ("proxy".equals(rule.getName())) {
+                OkHttp.selector().setHosts(rule.getHosts());
+            }
+        }
         rules.remove(Rule.create("proxy"));
         this.rules = rules;
     }
@@ -298,14 +358,24 @@ public class ApiConfig {
 
     public List<Parse> getParses(int type) {
         List<Parse> items = new ArrayList<>();
-        for (Parse item : getParses()) if (item.getType() == type) items.add(item);
+        for (Parse item : getParses()) {
+            if (item.getType() == type) {
+                items.add(item);
+            }
+        }
         return items;
     }
 
     public List<Parse> getParses(int type, String flag) {
         List<Parse> items = new ArrayList<>();
-        for (Parse item : getParses(type)) if (item.getExt().getFlag().contains(flag)) items.add(item);
-        if (items.isEmpty()) items.addAll(getParses(type));
+        for (Parse item : getParses(type)) {
+            if (item.getExt().getFlag().contains(flag)) {
+                items.add(item);
+            }
+        }
+        if (items.isEmpty()) {
+            items.addAll(getParses(type));
+        }
         return items;
     }
 
@@ -355,19 +425,25 @@ public class ApiConfig {
         this.parse = parse;
         this.parse.setActivated(true);
         config.parse(parse.getName()).update();
-        for (Parse item : getParses()) item.setActivated(parse);
+        for (Parse item : getParses()) {
+            item.setActivated(parse);
+        }
     }
 
     public void setHome(Site home) {
         this.home = home;
         this.home.setActivated(true);
         config.home(home.getKey()).update();
-        for (Site item : getSites()) item.setActivated(home);
+        for (Site item : getSites()) {
+            item.setActivated(home);
+        }
     }
 
     private void setWall(String wall) {
         this.wall = wall;
         boolean load = !TextUtils.isEmpty(wall) && WallConfig.get().isSame(wall);
-        if (load) WallConfig.get().config(Config.find(wall, config.getName(), 2).update());
+        if (load) {
+            WallConfig.get().config(Config.find(wall, config.getName(), 2).update());
+        }
     }
 }

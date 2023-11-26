@@ -23,16 +23,28 @@ public class Decoder {
         String key = url.contains(";") ? url.split(";")[2] : "";
         url = url.contains(";") ? url.split(";")[0] : url;
         String data = getData(url);
-        if (Json.valid(data)) return fix(url, data);
-        if (data.isEmpty()) throw new Exception();
-        if (data.contains("**")) data = base64(data);
-        if (data.startsWith("2423")) data = cbc(data);
-        if (key.length() > 0) data = ecb(data, key);
+        if (Json.valid(data)) {
+            return fix(url, data);
+        }
+        if (data.isEmpty()) {
+            throw new Exception();
+        }
+        if (data.contains("**")) {
+            data = base64(data);
+        }
+        if (data.startsWith("2423")) {
+            data = cbc(data);
+        }
+        if (key.length() > 0) {
+            data = ecb(data, key);
+        }
         return fix(url, data);
     }
 
     private static String fix(String url, String data) {
-        if (url.startsWith("file")) url = Utils.convert(url);
+        if (url.startsWith("file")) {
+            url = Utils.convert(url);
+        }
         data = data.replace("./", url.substring(0, url.lastIndexOf("/") + 1));
         return data;
     }
@@ -48,9 +60,13 @@ public class Decoder {
     public static File getSpider(String url, String md5) {
         try {
             File file = Path.jar(url);
-            if (md5.length() > 0 && Util.equals(url, md5)) return file;
+            if (md5.length() > 0 && Util.equals(url, md5)) {
+                return file;
+            }
             String data = extract(getData(url.substring(4)));
-            if (data.isEmpty()) return Path.jar(url);
+            if (data.isEmpty()) {
+                return Path.jar(url);
+            }
             return Path.write(file, Base64.decode(data, Base64.DEFAULT));
         } catch (Exception ignored) {
             return Path.jar(url);
@@ -58,8 +74,12 @@ public class Decoder {
     }
 
     private static String getData(String url) {
-        if (url.startsWith("http")) return OkHttp.string(url);
-        if (url.startsWith("file")) return Path.read(url);
+        if (url.startsWith("http")) {
+            return OkHttp.string(url);
+        }
+        if (url.startsWith("file")) {
+            return Path.read(url);
+        }
         return "";
     }
 
@@ -85,7 +105,9 @@ public class Decoder {
 
     private static String base64(String data) {
         String extract = extract(data);
-        if (extract.isEmpty()) return data;
+        if (extract.isEmpty()) {
+            return data;
+        }
         return new String(Base64.decode(extract, Base64.DEFAULT));
     }
 
@@ -100,7 +122,9 @@ public class Decoder {
 
     private static byte[] decodeHex(String s) {
         byte[] bytes = new byte[s.length() / 2];
-        for (int i = 0; i < bytes.length; i++) bytes[i] = Integer.valueOf(s.substring(i * 2, i * 2 + 2), 16).byteValue();
+        for (int i = 0; i < bytes.length; i++) {
+            bytes[i] = Integer.valueOf(s.substring(i * 2, i * 2 + 2), 16).byteValue();
+        }
         return bytes;
     }
 }

@@ -41,7 +41,9 @@ public class WallConfig {
     }
 
     public static Drawable drawable(Drawable drawable) {
-        if (get().drawable != null) return drawable;
+        if (get().drawable != null) {
+            return drawable;
+        }
         get().setDrawable(drawable);
         return drawable;
     }
@@ -81,8 +83,11 @@ public class WallConfig {
     private void loadConfig(Callback callback) {
         try {
             File file = write(FileUtil.getWall(0));
-            if (file.exists() && file.length() > 0) refresh(0);
-            else config(Config.find(ApiConfig.get().getWall(), 2));
+            if (file.exists() && file.length() > 0) {
+                refresh(0);
+            } else {
+                config(Config.find(ApiConfig.get().getWall(), 2));
+            }
             App.post(callback::success);
             config.update();
         } catch (Throwable e) {
@@ -93,9 +98,13 @@ public class WallConfig {
     }
 
     private File write(File file) throws IOException {
-        if (getUrl().startsWith("file")) Path.copy(Path.local(getUrl()), file);
-        else if (getUrl().startsWith("http")) Path.write(file, ImgUtil.resize(OkHttp.newCall(getUrl()).execute().body().bytes()));
-        else file.delete();
+        if (getUrl().startsWith("file")) {
+            Path.copy(Path.local(getUrl()), file);
+        } else if (getUrl().startsWith("http")) {
+            Path.write(file, ImgUtil.resize(OkHttp.newCall(getUrl()).execute().body().bytes()));
+        } else {
+            file.delete();
+        }
         return file;
     }
 

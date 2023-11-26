@@ -22,7 +22,9 @@ public class PyLoader {
     }
 
     public void clear() {
-        for (Spider spider : spiders.values()) spider.destroy();
+        for (Spider spider : spiders.values()) {
+            spider.destroy();
+        }
         spiders.clear();
     }
 
@@ -39,7 +41,9 @@ public class PyLoader {
 
     public Spider getSpider(String key, String api, String ext) {
         try {
-            if (spiders.containsKey(key)) return spiders.get(key);
+            if (spiders.containsKey(key)) {
+                return spiders.get(key);
+            }
             Method method = loader.getClass().getMethod("spider", Context.class, String.class, String.class);
             Spider spider = (Spider) method.invoke(loader, App.get(), api.split("py_")[1], ext);
             spider.init(App.get(), ext);
@@ -54,7 +58,9 @@ public class PyLoader {
     public Object[] proxyInvoke(Map<String, String> params) {
         try {
             Spider spider = spiders.get(recent);
-            if (spider == null) return null;
+            if (spider == null) {
+                return null;
+            }
             return spider.proxyLocal(params);
         } catch (Throwable e) {
             e.printStackTrace();

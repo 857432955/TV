@@ -35,7 +35,9 @@ public class JarLoader {
     }
 
     public void clear() {
-        for (Spider spider : spiders.values()) spider.destroy();
+        for (Spider spider : spiders.values()) {
+            spider.destroy();
+        }
         loaders.clear();
         methods.clear();
         spiders.clear();
@@ -97,7 +99,9 @@ public class JarLoader {
     }
 
     public DexClassLoader getLoader(String key, String jar) {
-        if (!loaders.containsKey(key)) parseJar(key, jar);
+        if (!loaders.containsKey(key)) {
+            parseJar(key, jar);
+        }
         return loaders.get(key);
     }
 
@@ -105,8 +109,12 @@ public class JarLoader {
         try {
             String jaKey = Util.md5(jar);
             String spKey = jaKey + key;
-            if (spiders.containsKey(spKey)) return spiders.get(spKey);
-            if (!loaders.containsKey(jaKey)) parseJar(jaKey, jar);
+            if (spiders.containsKey(spKey)) {
+                return spiders.get(spKey);
+            }
+            if (!loaders.containsKey(jaKey)) {
+                parseJar(jaKey, jar);
+            }
             Spider spider = (Spider) loaders.get(jaKey).loadClass("com.github.catvod.spider." + api.split("csp_")[1]).newInstance();
             spider.init(App.get(), ext);
             spiders.put(spKey, spider);
@@ -132,7 +140,9 @@ public class JarLoader {
     public Object[] proxyInvoke(Map<String, String> params) {
         try {
             Method method = methods.get(Util.md5(recent));
-            if (method == null) return null;
+            if (method == null) {
+                return null;
+            }
             return (Object[]) method.invoke(null, params);
         } catch (Throwable e) {
             e.printStackTrace();
